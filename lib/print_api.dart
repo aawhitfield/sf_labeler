@@ -1,7 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:another_brother/label_info.dart';
-import 'package:another_brother/printer_info.dart';
+import 'package:another_brother/printer_info.dart' as brother;
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sf_labeler/models/sales_force_contact.dart';
@@ -9,7 +9,6 @@ import 'package:sf_labeler/models/sales_force_contact.dart';
 class PrintAPI {
   static void printContact(
       BuildContext context, SalesForceContact contact) async {
-
     // get Bluetooth permission
     if (!await Permission.bluetoothConnect.request().isGranted) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -31,13 +30,15 @@ class PrintAPI {
       return;
     }
 
-    Printer printer = Printer();
-    PrinterInfo printInfo = PrinterInfo();
+    brother.Printer printer = brother.Printer();
+    brother.PrinterInfo printInfo = brother.PrinterInfo();
 
-    printInfo.printerModel = Model.QL_1110NWB;
-    printInfo.printMode = PrintMode.FIT_TO_PAGE;
+    printInfo.printerModel = brother.Model.QL_1110NWB;
+    printInfo.printMode = brother.PrintMode.FIT_TO_PAGE;
     printInfo.isAutoCut = true;
-    printInfo.port = Port.BLUETOOTH;
+    printInfo.orientation = brother.Orientation.LANDSCAPE;
+    printInfo.port = brother.Port.BLUETOOTH;
+    printInfo.align = brother.Align.CENTER;
 
     // set the label type
     printInfo.labelNameIndex = QL1100.ordinalFromID(QL1100.W103H164.getId());
@@ -46,8 +47,8 @@ class PrintAPI {
     await printer.setPrinterInfo(printInfo);
 
     // Get a list of printers with my model available
-    List<BluetoothPrinter> printers =
-        await printer.getBluetoothPrinters([Model.QL_1110NWB.getName()]);
+    List<brother.BluetoothPrinter> printers = await printer
+        .getBluetoothPrinters([brother.Model.QL_1110NWB.getName()]);
 
     if (printers.isEmpty) {
       // Show a message if no printers are found.
@@ -72,7 +73,8 @@ class PrintAPI {
       fontSize: 12.0,
       fontWeight: FontWeight.w500,
     ))
-      ..pushStyle(Theme.of(context).textTheme.bodyText1!.getTextStyle())
+      ..pushStyle(Theme.of(context).textTheme.headline4!.getTextStyle())
+      ..addText('\n\n\n\n\n\n\n\n\n\n\n\n')
       ..addText(contact.name ?? '')
       ..addText('\n')
       ..addText(contact.mailingStreet ?? '')
@@ -81,7 +83,9 @@ class PrintAPI {
           ' ${contact.mailingCity ?? ''}, ${contact.mailingState ?? ''} ${contact.mailingPostalCode ?? ''}');
 
     final ui.Paragraph paragraph = paragraphBuilder.build()
-      ..layout(ui.ParagraphConstraints(width: MediaQuery.of(context).size.width - 12.0 - 12.0));
+      ..layout(ui.ParagraphConstraints(
+          width: MediaQuery.of(context).size.width - 12.0 - 12.0)
+          );
 
     printer.printText(paragraph);
   }
