@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:sf_labeler/contact_details.dart';
 import 'package:sf_labeler/models/sales_force_api.dart';
 import 'package:sf_labeler/models/sales_force_authorization.dart';
 import 'package:sf_labeler/models/sales_force_contact.dart';
@@ -38,6 +40,13 @@ class ContactsList extends StatelessWidget {
                         ],
                       ),
                       isThreeLine: true,
+                      onTap: () {
+                        SalesForceContact contact = snapshot.data![index];
+                        Get.to(
+                          ContactDetails(contact),
+                          transition: Transition.rightToLeft,
+                        );
+                      },
                     );
                   }
                 });

@@ -21,6 +21,7 @@ class _AuthorizationState extends State<Authorization> {
       appBar: AppBar(),
       body: InAppWebView(
         key: webViewKey,
+        initialOptions: InAppWebViewGroupOptions(android: AndroidInAppWebViewOptions(useHybridComposition: true)),
         initialUrlRequest: URLRequest(
             url: Uri.parse(
                 "https://login.salesforce.com/services/oauth2/authorize?response_type=code&client_id=3MVG9riCAn8HHkYUeNXLeHjXdlW6ncpfGaKj4DNJysxBFIV.D.EavXpNaBy9MdAebmTZgqm9OkzKBC0n0HSfW&redirect_uri=https://us-central1-sf-labeler.cloudfunctions.net/oauth")),
