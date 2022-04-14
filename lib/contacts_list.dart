@@ -43,7 +43,7 @@ class ContactsList extends StatelessWidget {
                       onTap: () {
                         SalesForceContact contact = snapshot.data![index];
                         Get.to(
-                          ContactDetails(contact),
+                            () => ContactDetails(contact),
                           transition: Transition.rightToLeft,
                         );
                       },
