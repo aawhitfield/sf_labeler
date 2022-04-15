@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
 import 'package:sf_labeler/contacts_list.dart';
 import 'package:sf_labeler/models/sales_force_authorization.dart';
@@ -17,8 +18,8 @@ class _AuthorizationState extends State<Authorization> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
+    return PlatformScaffold(
+      appBar: PlatformAppBar(),
       body: InAppWebView(
         key: webViewKey,
         initialOptions: InAppWebViewGroupOptions(android: AndroidInAppWebViewOptions(useHybridComposition: true)),
