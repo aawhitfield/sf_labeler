@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
-                  'Quickly print labels on a Brother printer for any of your Salesforce contacts',
+                  'Quickly print labels on a Brother printer for any of your Salesforce contacts.',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.lato(
                     textStyle: const TextStyle(
