@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:sf_labeler/authorization.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -27,25 +29,39 @@ class _MyHomePageState extends State<MyHomePage> {
         shadowColor: Colors.transparent,
         backgroundColor: Colors.transparent,
         systemOverlayStyle:
-        const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+            const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       ),
       body: Stack(
         children: [
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const <Widget>[
-                Text(
-                  'SF Labeler\nPress the button to get started!',
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Lottie.network(
+                  'https://assets2.lottiefiles.com/private_files/lf30_dotmkp93.json'),
+              Text(
+                'salesforce Labeler',
+                style: GoogleFonts.lato(
+                  textStyle: const TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-              ],
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 32.0),
-              child: ElevatedButton(
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  'Quickly print labels on a Brother printer for any of your Salesforce contacts',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.lato(
+                    textStyle: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor:
                   MaterialStateProperty.all<Color>(Colors.white),
@@ -60,10 +76,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: const EdgeInsets.only(
                       left: 64.0, right: 64.0, top: 12.0, bottom: 12.0),
                   child: Text('Get Started',
-                      style: Theme.of(context).textTheme.bodyText1),
+                      style: Theme.of(context).textTheme.headline6),
                 ),
               ),
-            ),
+            ],
           ),
         ],
       ),
