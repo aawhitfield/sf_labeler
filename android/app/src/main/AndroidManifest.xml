@@ -3,7 +3,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
    <application
-        android:label="sf_labeler"
+        android:label="SF Labeler"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
