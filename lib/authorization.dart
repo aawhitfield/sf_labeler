@@ -17,6 +17,7 @@ class _AuthorizationState extends State<Authorization> {
 
   @override
   Widget build(BuildContext context) {
+
     return const CustomPlatformScaffold(
       title: Text('Sign into Salesforce'),
       child: SalesForceLogin(),

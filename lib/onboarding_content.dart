@@ -29,6 +29,7 @@ List<Widget> onBoardingContent(BuildContext context) {
         children: [
           Text(
             'salesforce Labeler',
+            textAlign: TextAlign.center,
             style: GoogleFonts.lato(
               textStyle: TextStyle(
                 // larger font size on larger sized devices
