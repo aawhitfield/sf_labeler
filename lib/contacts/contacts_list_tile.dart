@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sf_labeler/contacts/contact_details.dart';
+import 'package:sf_labeler/contacts/flag.dart';
 import 'package:sf_labeler/models/sales_force_contact.dart';
 
 class ContactsListTile extends StatelessWidget {
@@ -47,6 +48,7 @@ class ContactsListTile extends StatelessWidget {
           ],
         ),
         isThreeLine: true,
+        leading: Flag(contact),
         trailing: const Icon(CupertinoIcons.chevron_forward),
         onTap: () {
           Get.to(
