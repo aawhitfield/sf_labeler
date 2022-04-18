@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
-import 'package:sf_labeler/contacts_list.dart';
+import 'package:sf_labeler/contacts/contacts_list.dart';
 import 'package:sf_labeler/models/sales_force_authorization.dart';
 
 class Authorization extends StatefulWidget {

@@ -32,28 +32,40 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'SF Labeler',
-      theme: theme,
-      home: FutureBuilder<SharedPreferences>(
-        future: SharedPreferences.getInstance(),
-        builder: (context, snapshot) {
-          if(snapshot.connectionState == ConnectionState.waiting) {
-            return const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-          SharedPreferences prefs = snapshot.data!;
-          bool isFirstRun = prefs.getBool(SharedPreferencesKeys.keyIsFirstRun.name) ?? true;
-          if(isFirstRun) {
-            prefs.setBool(SharedPreferencesKeys.keyIsFirstRun.name, false);
-            return const MyHomePage(title: 'SF Labeler');
-          }
-
-          return const Authorization();
+    return GestureDetector(
+      // updated method as of v1.17.1 of Flutter to close soft keyboard
+      // by tapping in "blank" space
+      // from https://stackoverflow.com/a/61986983/4333051
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus &&
+            currentFocus.focusedChild != null) {
+          currentFocus.focusedChild!.unfocus();
         }
+      },
+      child: GetMaterialApp(
+        title: 'SF Labeler',
+        theme: theme,
+        home: FutureBuilder<SharedPreferences>(
+          future: SharedPreferences.getInstance(),
+          builder: (context, snapshot) {
+            if(snapshot.connectionState == ConnectionState.waiting) {
+              return const Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+            SharedPreferences prefs = snapshot.data!;
+            bool isFirstRun = prefs.getBool(SharedPreferencesKeys.keyIsFirstRun.name) ?? true;
+            if(isFirstRun) {
+              prefs.setBool(SharedPreferencesKeys.keyIsFirstRun.name, false);
+              return const MyHomePage(title: 'SF Labeler');
+            }
+    
+            return const Authorization();
+          }
+        ),
       ),
     );
   }
