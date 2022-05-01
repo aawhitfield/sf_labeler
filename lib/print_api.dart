@@ -7,7 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:sf_labeler/models/sales_force_contact.dart';
 
 class PrintAPI {
-  static void printContact(
+  static Future<void> printContact(
       BuildContext context, SalesForceContact contact) async {
     // get Bluetooth permission
     if (!await Permission.bluetoothConnect.request().isGranted) {
@@ -84,9 +84,9 @@ class PrintAPI {
 
     final ui.Paragraph paragraph = paragraphBuilder.build()
       ..layout(ui.ParagraphConstraints(
-          width: MediaQuery.of(context).size.width - 12.0 - 12.0)
-          );
+          width: MediaQuery.of(context).size.width - 12.0 - 12.0));
 
-    printer.printText(paragraph);
+    await printer.printText(paragraph);
+    return;
   }
 }

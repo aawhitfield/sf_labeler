@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sf_labeler/contacts/contacts_list_tile.dart';
 import 'package:sf_labeler/models/sales_force_contact.dart';
+import 'package:sf_labeler/providers.dart';
 
-class ContactsListBody extends StatefulWidget {
+class ContactsListBody extends ConsumerStatefulWidget {
   const ContactsListBody(this.contacts, {Key? key}) : super(key: key);
 
   final List<SalesForceContact> contacts;
@@ -11,9 +13,10 @@ class ContactsListBody extends StatefulWidget {
   _ContactsListBodyState createState() => _ContactsListBodyState();
 }
 
-class _ContactsListBodyState extends State<ContactsListBody> {
+class _ContactsListBodyState extends ConsumerState<ContactsListBody> {
   List<SalesForceContact> filteredContacts = <SalesForceContact>[];
   final TextEditingController _searchController = TextEditingController();
+  // list to store the state of which listtiles are selected
 
   @override
   void initState() {
@@ -79,11 +82,32 @@ class _ContactsListBodyState extends State<ContactsListBody> {
             ),
           ),
 
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: Text(
+              'Tap to mark a contact for printing, then press print to print selected contacts.',
+              // '\nLong press a contact to edit/delete.',
+              style: Theme.of(context).textTheme.caption,
+            ),
+          ),
+
           Expanded(
             child: ListView.builder(
                 itemCount: filteredContacts.length,
                 itemBuilder: (context, index) {
-                  return ContactsListTile(contact: filteredContacts[index]);
+                  bool isSelected = ref.watch(selectedProvider).toBePrinted
+                      .contains(filteredContacts[index]);
+
+                  return ContactsListTile(
+                      contact: filteredContacts[index],
+                      isSelected: isSelected,
+                      onTap: () {
+                        if(isSelected) {
+                          ref.read(selectedProvider).removeFromPrint(filteredContacts[index]);
+                        } else {
+                          ref.read(selectedProvider).addToPrint(filteredContacts[index]);
+                        }
+                      });
                 }),
           ),
         ],
