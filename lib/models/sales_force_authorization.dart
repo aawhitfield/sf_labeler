@@ -4,7 +4,9 @@
 
 import 'dart:convert';
 
-class SalesForceAuthorization {
+import 'package:flutter/material.dart';
+
+class SalesForceAuthorization extends ChangeNotifier{
   SalesForceAuthorization({
     required this.accessToken,
     required this.signature,
@@ -14,12 +16,12 @@ class SalesForceAuthorization {
     required this.issuedAt,
   });
 
-  final String accessToken;
-  final String signature;
-  final String scope;
-  final String instanceUrl;
-  final String tokenType;
-  final int issuedAt;
+  String accessToken;
+  String signature;
+  String scope;
+  String instanceUrl;
+  String tokenType;
+  int issuedAt;
 
   factory SalesForceAuthorization.fromJson(String str) => SalesForceAuthorization.fromMap(json.decode(str));
 
@@ -42,4 +44,14 @@ class SalesForceAuthorization {
     "token_type": tokenType,
     "issued_at": issuedAt,
   };
+
+  void saveNewAuthorization(SalesForceAuthorization authorization) {
+    accessToken = authorization.accessToken;
+    signature = authorization.signature;
+    scope = authorization.scope;
+    instanceUrl = authorization.instanceUrl;
+    tokenType = authorization.tokenType;
+    issuedAt = authorization.issuedAt;
+    notifyListeners();
+  }
 }

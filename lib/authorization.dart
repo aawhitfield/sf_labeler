@@ -2,9 +2,11 @@ import 'package:custom_widgets/custom_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:sf_labeler/contacts/contacts_list.dart';
 import 'package:sf_labeler/models/sales_force_authorization.dart';
+import 'package:sf_labeler/providers.dart';
 
 class Authorization extends StatefulWidget {
   const Authorization({Key? key}) : super(key: key);
@@ -14,10 +16,8 @@ class Authorization extends StatefulWidget {
 }
 
 class _AuthorizationState extends State<Authorization> {
-
   @override
   Widget build(BuildContext context) {
-
     return const CustomPlatformScaffold(
       title: Text('Sign into Salesforce'),
       child: SalesForceLogin(),
@@ -25,14 +25,14 @@ class _AuthorizationState extends State<Authorization> {
   }
 }
 
-class SalesForceLogin extends StatefulWidget {
+class SalesForceLogin extends ConsumerStatefulWidget {
   const SalesForceLogin({Key? key}) : super(key: key);
 
   @override
-  State<SalesForceLogin> createState() => _SalesForceLoginState();
+  ConsumerState<SalesForceLogin> createState() => _SalesForceLoginState();
 }
 
-class _SalesForceLoginState extends State<SalesForceLogin> {
+class _SalesForceLoginState extends ConsumerState<SalesForceLogin> {
   final GlobalKey webViewKey = GlobalKey();
   InAppWebViewController? webViewController;
 
@@ -56,11 +56,13 @@ class _SalesForceLoginState extends State<SalesForceLogin> {
               source: "window.document.body.innerText");
 
           SalesForceAuthorization salesForceAuthorization =
-          SalesForceAuthorization.fromJson(html);
+              SalesForceAuthorization.fromJson(html);
+          ref
+              .read(authorizationProvider)
+              .saveNewAuthorization(salesForceAuthorization);
           Get.offAll(() => ContactsList(salesForceAuthorization));
         }
       },
     );
   }
 }
-

@@ -13,6 +13,7 @@ class SalesForceContact {
     this.mailingCity,
     this.mailingState,
     this.mailingPostalCode,
+    this.photoUrl,
   });
 
   final Attributes? attributes;
@@ -22,6 +23,7 @@ class SalesForceContact {
   final String? mailingCity;
   final String? mailingState;
   final String? mailingPostalCode;
+  final String? photoUrl;
 
   factory SalesForceContact.fromJson(String str) => SalesForceContact.fromMap(json.decode(str));
 
@@ -35,6 +37,7 @@ class SalesForceContact {
     mailingCity: json["MailingCity"],
     mailingState: json["MailingState"],
     mailingPostalCode: json["MailingPostalCode"],
+    photoUrl: json["PhotoUrl"],
   );
 
   Map<String, dynamic> toMap() => {
@@ -45,6 +48,7 @@ class SalesForceContact {
     "MailingCity": mailingCity,
     "MailingState": mailingState,
     "MailingPostalCode": mailingPostalCode,
+    "PhotoUrl": photoUrl,
   };
 }
 

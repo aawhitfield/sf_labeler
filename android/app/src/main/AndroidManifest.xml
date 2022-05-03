@@ -2,6 +2,7 @@
     package="us.binarychaos.sf_labeler.sf_labeler">
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="SF Labeler"
         android:name="${applicationName}"

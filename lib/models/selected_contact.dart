@@ -4,6 +4,8 @@ import 'package:sf_labeler/models/sales_force_contact.dart';
 class SelectedContact extends ChangeNotifier {
   List<SalesForceContact> toBePrinted = <SalesForceContact>[];
   bool isPrinting = false;
+  bool isDeleting = false;
+  bool isUpdating = false;
 
   void addToPrint(SalesForceContact contact) {
     toBePrinted.add(contact);
@@ -22,6 +24,16 @@ class SelectedContact extends ChangeNotifier {
 
   void updateIsPrinting(bool isPrinting) {
     this.isPrinting = isPrinting;
+    notifyListeners();
+  }
+
+  void updateIsDeleting(bool isDeleting) {
+    this.isDeleting = isDeleting;
+    notifyListeners();
+  }
+
+  void updateIsUpdating(bool isUpdating) {
+    this.isUpdating = isUpdating;
     notifyListeners();
   }
 }

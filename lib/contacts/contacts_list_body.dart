@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sf_labeler/contacts/contacts_list_tile.dart';
+import 'package:sf_labeler/models/sales_force_api.dart';
 import 'package:sf_labeler/models/sales_force_contact.dart';
 import 'package:sf_labeler/providers.dart';
 
@@ -85,30 +86,53 @@ class _ContactsListBodyState extends ConsumerState<ContactsListBody> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: Text(
-              'Tap to mark a contact for printing, then press print to print selected contacts.',
-              // '\nLong press a contact to edit/delete.',
+              'Tap to mark a contact for printing, then press print to print selected contacts.'
+              '\nLong press a contact to edit/delete.',
               style: Theme.of(context).textTheme.caption,
             ),
           ),
 
           Expanded(
-            child: ListView.builder(
-                itemCount: filteredContacts.length,
-                itemBuilder: (context, index) {
-                  bool isSelected = ref.watch(selectedProvider).toBePrinted
-                      .contains(filteredContacts[index]);
+            child: RefreshIndicator(
+              onRefresh: () {
+                String accessToken =
+                    ref.read(authorizationProvider).accessToken;
+                return SalesForceAPI.getContacts(accessToken).then((value) => {
+                      setState(() {
+                        _searchController.clear();
+                        filteredContacts = value;
+                        // sort the contacts by name
+                        filteredContacts.sort(
+                            (a, b) => (a.name ?? '').compareTo(b.name ?? ''));
+                      })
+                    });
+              },
+              child: ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: filteredContacts.length,
+                  itemBuilder: (context, index) {
+                    bool isSelected = ref
+                        .watch(selectedProvider)
+                        .toBePrinted
+                        .contains(filteredContacts[index]);
 
-                  return ContactsListTile(
+                    return ContactsListTile(
                       contact: filteredContacts[index],
                       isSelected: isSelected,
                       onTap: () {
-                        if(isSelected) {
-                          ref.read(selectedProvider).removeFromPrint(filteredContacts[index]);
+                        if (isSelected) {
+                          ref
+                              .read(selectedProvider)
+                              .removeFromPrint(filteredContacts[index]);
                         } else {
-                          ref.read(selectedProvider).addToPrint(filteredContacts[index]);
+                          ref
+                              .read(selectedProvider)
+                              .addToPrint(filteredContacts[index]);
                         }
-                      });
-                }),
+                      },
+                    );
+                  }),
+            ),
           ),
         ],
       ),
