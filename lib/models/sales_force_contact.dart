@@ -9,6 +9,8 @@ class SalesForceContact {
     this.attributes,
     this.id,
     this.name,
+    this.firstName,
+    this.lastName,
     this.mailingStreet,
     this.mailingCity,
     this.mailingState,
@@ -19,6 +21,8 @@ class SalesForceContact {
   final Attributes? attributes;
   final String? id;
   final String? name;
+  final String? firstName;
+  final String? lastName;
   final String? mailingStreet;
   final String? mailingCity;
   final String? mailingState;
@@ -33,6 +37,8 @@ class SalesForceContact {
     attributes: json["attributes"] == null ? null : Attributes.fromMap(json["attributes"]),
     id: json["Id"],
     name: json["Name"],
+    firstName: json["FirstName"],
+    lastName: json["LastName"],
     mailingStreet: json["MailingStreet"],
     mailingCity: json["MailingCity"],
     mailingState: json["MailingState"],
@@ -44,6 +50,8 @@ class SalesForceContact {
     "attributes": attributes?.toMap(),
     "Id": id,
     "Name": name,
+    "FirstName": firstName,
+    "LastName": lastName,
     "MailingStreet": mailingStreet,
     "MailingCity": mailingCity,
     "MailingState": mailingState,

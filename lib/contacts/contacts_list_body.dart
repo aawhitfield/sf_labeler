@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sf_labeler/contacts/add_contact_picker.dart';
 import 'package:sf_labeler/contacts/contacts_list_tile.dart';
 import 'package:sf_labeler/models/sales_force_api.dart';
 import 'package:sf_labeler/models/sales_force_contact.dart';
@@ -91,6 +93,39 @@ class _ContactsListBodyState extends ConsumerState<ContactsListBody> {
               style: Theme.of(context).textTheme.caption,
             ),
           ),
+
+          Align(
+            alignment: Alignment.topRight,
+            child: OutlinedButton.icon(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    Theme.of(context).colorScheme.primary,
+                  ),
+                  shape: MaterialStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
+                onPressed: () async {
+                  await showCupertinoModalPopup(
+                      context: context,
+                      builder: (context) => const AddContactPicker());
+                },
+                icon: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+                label: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12.0),
+                  child: Text(
+                    'Add Contact',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                )),
+          ),
+
+          const SizedBox(height: 8),
 
           Expanded(
             child: RefreshIndicator(

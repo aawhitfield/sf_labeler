@@ -8,7 +8,7 @@ class SalesForceAPI {
   static Future<List<SalesForceContact>> getContacts(String accessToken) async {
     final response = await http.get(
       Uri.parse(
-          'https://brotherhackathon-dev-ed.my.salesforce.com/services/data/v42.0/query/?q=SELECT+id,PhotoUrl,name,MailingStreet,MailingCity,MailingState,MailingPostalCode+from+Contact'),
+          'https://brotherhackathon-dev-ed.my.salesforce.com/services/data/v42.0/query/?q=SELECT+id,PhotoUrl,name,FirstName,LastName,MailingStreet,MailingCity,MailingState,MailingPostalCode+from+Contact'),
       headers: {
         'Authorization': 'Bearer $accessToken',
       },
@@ -46,6 +46,7 @@ class SalesForceAPI {
       throw Exception('Failed to delete contact');
     }
   }
+
 ////////////////////////////////////////////////////////////////////////////////
   static Future<void> editContact(
       String accessToken, String contactId, String data) async {
@@ -63,6 +64,26 @@ class SalesForceAPI {
     } else {
       debugPrint('${response.statusCode} ${response.body}');
       throw Exception('Failed to edit contact');
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////
+  static Future<void> createContact(String accessToken, String data) async {
+    final response = await http.post(
+      Uri.parse(
+          'https://brotherhackathon-dev-ed.my.salesforce.com/services/data/v54.0/sobjects/Contact'),
+      headers: {
+        "referenceId": "NewContact",
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+      body: data,
+    );
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      return;
+    } else {
+      debugPrint('${response.statusCode} ${response.body}');
+      throw Exception('Failed to create contact');
     }
   }
 }

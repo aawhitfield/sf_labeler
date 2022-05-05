@@ -5,22 +5,19 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:sf_labeler/contacts/contacts_list.dart';
-import 'package:sf_labeler/contacts/is_updating_dialog.dart';
+import 'package:sf_labeler/contacts/is_creating_dialog.dart';
 import 'package:sf_labeler/models/sales_force_api.dart';
 import 'package:sf_labeler/models/sales_force_authorization.dart';
-import 'package:sf_labeler/models/sales_force_contact.dart';
 import 'package:sf_labeler/providers.dart';
 
-class ContactDetails extends ConsumerStatefulWidget {
-  final SalesForceContact contact;
-
-  const ContactDetails(this.contact, {Key? key}) : super(key: key);
+class AddContact extends ConsumerStatefulWidget {
+  const AddContact({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ContactDetails> createState() => _ContactDetailsState();
+  ConsumerState<AddContact> createState() => _ContactDetailsState();
 }
 
-class _ContactDetailsState extends ConsumerState<ContactDetails> {
+class _ContactDetailsState extends ConsumerState<AddContact> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _streetController = TextEditingController();
@@ -29,35 +26,17 @@ class _ContactDetailsState extends ConsumerState<ContactDetails> {
   final TextEditingController _zipController = TextEditingController();
 
   @override
-  void initState() {
-    if (widget.contact.name != null) {
-      _firstNameController.text = widget.contact.firstName!;
-    }
-    if (widget.contact.lastName != null) {
-      _lastNameController.text = widget.contact.lastName!;
-    }
-    if (widget.contact.mailingStreet != null) {
-      _streetController.text = widget.contact.mailingStreet!;
-    }
-    if (widget.contact.mailingCity != null) {
-      _cityController.text = widget.contact.mailingCity!;
-    }
-    if (widget.contact.mailingState != null) {
-      _stateController.text = widget.contact.mailingState!;
-    }
-    if (widget.contact.mailingPostalCode != null) {
-      _zipController.text = widget.contact.mailingPostalCode!;
-    }
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     String accessToken = ref.read(authorizationProvider).accessToken;
 
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        title: const Text(
+          'Add Contact',
+          style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700),
+        ),
+        centerTitle: true,
         systemOverlayStyle: SystemUiOverlayStyle(
             statusBarColor: Theme.of(context).primaryColor),
       ),
@@ -82,17 +61,9 @@ class _ContactDetailsState extends ConsumerState<ContactDetails> {
                   Center(
                     child: CircleAvatar(
                       radius: MediaQuery.of(context).size.width * 0.2,
-                      backgroundImage: (widget.contact.photoUrl != null)
-                          ? NetworkImage(
-                              'https://brotherhackathon-dev-ed.my.salesforce.com/' +
-                                  widget.contact.photoUrl!,
-                              headers: {
-                                  'Authorization': 'Bearer $accessToken',
-                                })
-                          : null,
-                      backgroundColor: (widget.contact.photoUrl == null)
-                          ? Theme.of(context).primaryColor
-                          : Colors.transparent,
+                      child: Icon(Icons.person_add,
+                          color: Colors.white,
+                          size: MediaQuery.of(context).size.width * 0.2),
                     ),
                   )
                 ],
@@ -173,7 +144,6 @@ class _ContactDetailsState extends ConsumerState<ContactDetails> {
                   child: OutlinedButton(
                     onPressed: () async {
                       String data = jsonEncode({
-                        // "Name": _nameController.text,
                         "FirstName": _firstNameController.text,
                         "LastName": _lastNameController.text,
                         "MailingStreet": _streetController.text,
@@ -181,13 +151,12 @@ class _ContactDetailsState extends ConsumerState<ContactDetails> {
                         "MailingState": _stateController.text,
                         "MailingPostalCode": _zipController.text,
                       });
-                      if (widget.contact.id != null) {
-                        showDialog(
-                            context: context,
-                            builder: (context) => const IsUpdatingDialog());
-                        await SalesForceAPI.editContact(
-                            accessToken, widget.contact.id!, data);
-                      }
+
+                      showDialog(
+                          context: context,
+                          builder: (context) => const IsCreatingDialog());
+                      await SalesForceAPI.createContact(accessToken, data);
+
                       SalesForceAuthorization salesForceAuthorization =
                           ref.read(authorizationProvider);
                       Get.offAll(() => ContactsList(salesForceAuthorization));
@@ -204,7 +173,7 @@ class _ContactDetailsState extends ConsumerState<ContactDetails> {
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 16.0),
                       child: Text(
-                        'Update Contact',
+                        'Create Contact',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,

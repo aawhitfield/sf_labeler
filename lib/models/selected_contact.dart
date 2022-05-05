@@ -6,6 +6,7 @@ class SelectedContact extends ChangeNotifier {
   bool isPrinting = false;
   bool isDeleting = false;
   bool isUpdating = false;
+  bool isCreating = false;
 
   void addToPrint(SalesForceContact contact) {
     toBePrinted.add(contact);
@@ -34,6 +35,11 @@ class SelectedContact extends ChangeNotifier {
 
   void updateIsUpdating(bool isUpdating) {
     this.isUpdating = isUpdating;
+    notifyListeners();
+  }
+
+  void updateIsCreating(bool isCreating) {
+    this.isCreating = isCreating;
     notifyListeners();
   }
 }
