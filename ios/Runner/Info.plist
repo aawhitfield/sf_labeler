@@ -67,6 +67,10 @@
         	<string>Need Location permission for Bluetooth scan to work</string>
         	<key>NSLocationWhenInUseUsageDescription</key>
         	<string>Need Location permission for Bluetooth scan to work</string>
+			<key>NSCameraUsageDescription</key>
+			<string>To be able to scan business cards to add contacts</string>
+			<key>NSMicrophoneUsageDescription</key>
+			<string>Needed for the camera plugin to work to scan business cards</string>
         	<key>UISupportedExternalAccessoryProtocols</key>
         	<array>
         		<string>com.brother.ptcbp</string>
