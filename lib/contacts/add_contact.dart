@@ -8,10 +8,13 @@ import 'package:sf_labeler/contacts/contacts_list.dart';
 import 'package:sf_labeler/contacts/is_creating_dialog.dart';
 import 'package:sf_labeler/models/sales_force_api.dart';
 import 'package:sf_labeler/models/sales_force_authorization.dart';
+import 'package:sf_labeler/models/sales_force_contact.dart';
 import 'package:sf_labeler/providers.dart';
 
 class AddContact extends ConsumerStatefulWidget {
-  const AddContact({Key? key}) : super(key: key);
+  const AddContact({Key? key, this.contact}) : super(key: key);
+
+  final SalesForceContact? contact;
 
   @override
   ConsumerState<AddContact> createState() => _ContactDetailsState();
@@ -26,6 +29,31 @@ class _ContactDetailsState extends ConsumerState<AddContact> {
   final TextEditingController _zipController = TextEditingController();
 
   @override
+  void initState() {
+    if (widget.contact != null) {
+      if (widget.contact!.firstName != null) {
+        _firstNameController.text = widget.contact!.firstName!;
+      }
+      if (widget.contact!.lastName != null) {
+        _lastNameController.text = widget.contact!.lastName!;
+      }
+      if (widget.contact!.mailingStreet != null) {
+        _streetController.text = widget.contact!.mailingStreet!;
+      }
+      if (widget.contact!.mailingCity != null) {
+        _cityController.text = widget.contact!.mailingCity!;
+      }
+      if (widget.contact!.mailingState != null) {
+        _stateController.text = widget.contact!.mailingState!;
+      }
+      if (widget.contact!.mailingPostalCode != null) {
+        _zipController.text = widget.contact!.mailingPostalCode!;
+      }
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     String accessToken = ref.read(authorizationProvider).accessToken;
 
@@ -34,7 +62,8 @@ class _ContactDetailsState extends ConsumerState<AddContact> {
         elevation: 0,
         title: const Text(
           'Add Contact',
-          style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700),
+          style: TextStyle(
+              color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700),
         ),
         centerTitle: true,
         systemOverlayStyle: SystemUiOverlayStyle(

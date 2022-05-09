@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:sf_labeler/contacts/add_contact.dart';
+import 'package:sf_labeler/models/add_contact_api.dart';
 
 class AddContactPicker extends StatelessWidget {
   const AddContactPicker({Key? key}) : super(key: key);
@@ -43,9 +44,7 @@ class AddContactPicker extends StatelessWidget {
               Text('Scan from Phone Camera'),
             ],
           ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: () async => await AddContactAPI.fromCamera(context),
         ),
         CupertinoActionSheetAction(
           onPressed: () {},
