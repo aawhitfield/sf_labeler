@@ -1,46 +1,59 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sf_labeler/models/business_card.dart';
 import 'package:sf_labeler/models/sales_force_api.dart';
 import 'package:sf_labeler/models/sales_force_contact.dart';
-import 'package:http_parser/http_parser.dart';
-
+import 'package:sf_labeler/providers.dart';
 import 'package:sf_labeler/secrets.dart';
 
 class CovveAPI {
-  static Future<SalesForceContact> processBusinessCardScan(File image) async {
-    String extension = image.path.split('.').last;
+  static Future<SalesForceContact> processBusinessCardScan(
+      BuildContext context, WidgetRef ref, File image) async {
+
     String fileName = image.path.split('/').last;
 
     Uint8List bytes = await image.readAsBytes();
 
-    // multipart request tutorial from https://stackoverflow.com/a/51813960/4333051 
-
-    Uri postUri = Uri.parse('https://app.covve.com/api/businesscards/scan');
-    http.MultipartRequest request = http.MultipartRequest('POST', postUri);
-
-    request.headers.addAll({
-      'Authorization': APIKeys.covve,
-      'Content-Type': 'multipart/form-data',
+    Response response;
+    Dio dio = Dio();
+    FormData formData = FormData.fromMap({
+      'image': MultipartFile.fromBytes(bytes, filename: fileName),
     });
-    request.files.add(http.MultipartFile.fromBytes('image', bytes, filename: fileName, contentType: MediaType('image', extension)));
+    response = await dio.post(
+      'https://app.covve.com/api/businesscards/scan',
+      options: Options(
+        headers: {
+          'Authorization': APIKeys.covve,
+          'Content-Type': 'multipart/form-data',
+        },
+      ),
+      data: formData,
+      onSendProgress: (int sent, int total) {
 
-    http.StreamedResponse response = await request.send();
-    String responseString = await response.stream.bytesToString();
-    responseString = responseString.replaceAll('\\"', '"');
+        ref.read(selectedProvider).updateProgress(sent, total);
+      },
+    );
+
+    Map<String, dynamic> responseMap = response.data;
+    
     if (response.statusCode == 201 || response.statusCode == 200) {
-      // multipart request doesn't return a response, but a streamedResponse so 
+      // multipart request doesn't return a response, but a streamedResponse so
       // we need to convert as per https://stackoverflow.com/a/55521892/4333051
 
-      BusinessCard card = BusinessCard.fromJson(responseString);
+      BusinessCard card = BusinessCard.fromMap(responseMap);
       SalesForceContact contact =
           SalesForceAPI.convertBusinessCardToContact(card);
       return contact;
     } else {
-      debugPrint('${response.statusCode} $responseString');
+      debugPrint('${response.statusCode} $responseMap');
+      Navigator.of(context).pop();
+      Fluttertoast.showToast(
+          msg: 'Error: ${response.statusCode} ${response.statusMessage}');
       throw Exception('Failed to create contact');
     }
   }

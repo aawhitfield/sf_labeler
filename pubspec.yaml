@@ -38,6 +38,7 @@ dependencies:
   custom_widgets:
     git:
       url: https://github.com/aawhitfield/custom_widgets
+  dio: ^4.0.6
   flutter_inappwebview: ^5.4.3+7
   flutter_riverpod: ^1.0.3
   flutter_svg: ^1.0.3

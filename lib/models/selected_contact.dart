@@ -7,6 +7,11 @@ class SelectedContact extends ChangeNotifier {
   bool isDeleting = false;
   bool isUpdating = false;
   bool isCreating = false;
+  bool isAnalyzing = false;
+
+  int sent = 0;
+  int total = 100;
+  int progress = 0;
 
   void addToPrint(SalesForceContact contact) {
     toBePrinted.add(contact);
@@ -40,6 +45,18 @@ class SelectedContact extends ChangeNotifier {
 
   void updateIsCreating(bool isCreating) {
     this.isCreating = isCreating;
+    notifyListeners();
+  }
+
+  void updateIsAnalyzing(bool isAnalyzing) {
+    this.isAnalyzing = isAnalyzing;
+    notifyListeners();
+  }
+
+  void updateProgress(int sent, int total) {
+    this.sent = sent;
+    this.total = total;
+    progress = ((sent / total) * 100).round();
     notifyListeners();
   }
 }

@@ -125,14 +125,34 @@ class SalesForceAPI {
         if (addressParts.length > 2 && addressParts[2].length == 2) {
           city = addressParts[1];
           state = addressParts[2];
-        } else if(addressParts.length > 1 && addressParts[1].length == 2) {
+        } else if (addressParts.length > 1 && addressParts[1].length == 2) {
           state = addressParts[1];
         }
       } else {
         street = card.addresses!.first.fullAddress!;
       }
     } else {
-      street = card.addresses!.first.fullAddress!;
+      // if no commas exist
+      List<String> addressPartsFromSpaces =
+          card.addresses!.first.fullAddress!.split(' ');
+      if (addressPartsFromSpaces.length > 1) {
+        // try to filter out zip at end and the state and then the city, the rest is the street
+        String last = addressPartsFromSpaces.last;
+        if (last.length == 5 &&
+            int.tryParse(last) != null &&
+            addressPartsFromSpaces.length > 3) {
+          zip = last;
+          state = addressPartsFromSpaces[addressPartsFromSpaces.length - 2];
+          city = addressPartsFromSpaces[addressPartsFromSpaces.length - 3];
+          for (int i = 0; i < addressPartsFromSpaces.length - 3; i++) {
+            street += addressPartsFromSpaces[i] + ' ';
+          }
+        } else {
+          street = card.addresses!.first.fullAddress!;
+        }
+      } else {
+        street = card.addresses!.first.fullAddress!;
+      }
     }
 
     SalesForceContact contact = SalesForceContact(
