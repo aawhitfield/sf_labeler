@@ -30,7 +30,7 @@ class _ContactDetailsState extends ConsumerState<AddContact> {
 
   @override
   void initState() {
-    ref.read(selectedProvider).updateIsAnalyzing(false);
+    ref.read(selectedProvider).updateIsAnalyzingWithoutNotifying(false);
     if (widget.contact != null) {
       if (widget.contact!.firstName != null) {
         _firstNameController.text = widget.contact!.firstName!;

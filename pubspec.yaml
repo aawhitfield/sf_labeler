@@ -33,6 +33,7 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+  air_brother: ^0.1.4
   another_brother: ^0.0.25
   cupertino_icons: ^1.0.4
   custom_widgets:

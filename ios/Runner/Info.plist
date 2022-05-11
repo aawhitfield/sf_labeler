@@ -76,6 +76,14 @@
         		<string>com.brother.ptcbp</string>
         		<string>com.issc.datapath</string>
         	</array>
+        	<key>NSBonjourServices</key>
+            <array>
+                <string>_ipp._tcp</string>
+                <string>_scanner._tcp</string>
+                <string>_pdl-datastream._tcp</string>
+            </array>
+            <key>NSLocalNetworkUsageDescription</key>
+            <string>To be able to find scanners.</string>
         	<!-- End Another Brother Section -->
     <key>ITSAppUsesNonExemptEncryption</key><false/>
 </dict>

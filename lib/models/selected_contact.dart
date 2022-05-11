@@ -53,6 +53,10 @@ class SelectedContact extends ChangeNotifier {
     notifyListeners();
   }
 
+    void updateIsAnalyzingWithoutNotifying(bool isAnalyzing) {
+    this.isAnalyzing = isAnalyzing;
+  }
+
   void updateProgress(int sent, int total) {
     this.sent = sent;
     this.total = total;
