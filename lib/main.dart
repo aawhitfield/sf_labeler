@@ -47,6 +47,7 @@ class MyApp extends StatelessWidget {
       child: GetMaterialApp(
         title: 'SF Labeler',
         theme: theme,
+        debugShowCheckedModeBanner: false,
         home: FutureBuilder<SharedPreferences>(
           future: SharedPreferences.getInstance(),
           builder: (context, snapshot) {

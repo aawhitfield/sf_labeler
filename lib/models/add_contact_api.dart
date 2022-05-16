@@ -27,9 +27,8 @@ class AddContactAPI {
     }
   }
 
-  static Future<SalesForceContact?> fromScanner(
+  static Future<JobState?> fromScanner(
       BuildContext context, WidgetRef ref) async {
-
     List<Connector> _fetchDevices = await AirBrother.getNetworkDevices(5000);
 
     // this is the list where the paths for the scanned files will be placed
@@ -45,10 +44,11 @@ class AddContactAPI {
       scanParams.autoDocumentSizeScan = true;
       scanParams.documentSize = MediaSize.BusinessCardLandscape;
       ref.read(scanProvider).updateStatus(ScanStatus.scanning);
-      // JobState jobState =
+      JobState jobState =
           await connector.performScan(scanParams, outScannedPaths);
 
-      return SalesForceContact();
+      ref.read(scanProvider).updateScannedPaths(outScannedPaths);
+      return jobState;
     }
   }
 }

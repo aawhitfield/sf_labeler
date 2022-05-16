@@ -24,35 +24,6 @@ class AddContactPicker extends ConsumerWidget {
       message: const Text('How would you like to add the new contact?'),
       actions: [
         CupertinoActionSheetAction(
-          child: Row(
-            children: const [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Icon(FontAwesomeIcons.penToSquare),
-              ),
-              Text('Enter Details Manually'),
-            ],
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-            Get.to(() => const AddContact());
-          },
-        ),
-        CupertinoActionSheetAction(
-          child: Row(
-            children: const [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Icon(FontAwesomeIcons.camera),
-              ),
-              Text('Scan from Phone Camera'),
-            ],
-          ),
-          onPressed: () async {
-            await AddContactAPI.fromCamera(context);
-          },
-        ),
-        CupertinoActionSheetAction(
           onPressed: () async {
             Navigator.of(context).pop();
             SalesForceContact? contact = await showDialog(
@@ -69,7 +40,36 @@ class AddContactPicker extends ConsumerWidget {
               Text('Scan with Brother Scanner'),
             ],
           ),
-        )
+        ),
+        CupertinoActionSheetAction(
+          child: Row(
+            children: const [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Icon(FontAwesomeIcons.camera),
+              ),
+              Text('Scan from Phone Camera'),
+            ],
+          ),
+          onPressed: () async {
+            await AddContactAPI.fromCamera(context);
+          },
+        ),
+        CupertinoActionSheetAction(
+          child: Row(
+            children: const [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Icon(FontAwesomeIcons.penToSquare),
+              ),
+              Text('Enter Details Manually'),
+            ],
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+            Get.to(() => const AddContact());
+          },
+        ),
       ],
       cancelButton: CupertinoActionSheetAction(
         onPressed: () {

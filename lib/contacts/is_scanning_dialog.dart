@@ -1,7 +1,11 @@
+import 'dart:io';
+
+import 'package:air_brother/air_brother.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sf_labeler/models/add_contact_api.dart';
+import 'package:sf_labeler/models/covve_api.dart';
 import 'package:sf_labeler/models/sales_force_contact.dart';
 import 'package:sf_labeler/models/scan_api.dart';
 import 'package:sf_labeler/providers.dart';
@@ -16,8 +20,24 @@ class IsScanningDialog extends ConsumerStatefulWidget {
 class _IsPrintingDialogState extends ConsumerState<IsScanningDialog> {
   SalesForceContact? contact;
 
+  void getScan() async {
+    JobState? jobState = await AddContactAPI.fromScanner(context, ref);
+    if (jobState == null || jobState != JobState.SuccessJob) {
+      Navigator.of(context).pop(contact);
+    } else {
+      ref.read(scanProvider).updateStatus(ScanStatus.connectToWifi);
+    }
+  }
+
   void getContact() async {
-    SalesForceContact? contact = await AddContactAPI.fromScanner(context, ref);
+    ref.read(scanProvider).updateStatus(ScanStatus.processing);
+    String path = ref.read(scanProvider).outScannedPaths.first;
+    if (path != '') {
+      File image = File(path);
+      contact = await CovveAPI.processBusinessCardScan(context, ref, image);
+      ref.read(scanProvider).updateStatus(ScanStatus.initial);
+    }
+
     Navigator.of(context).pop(contact);
   }
 
@@ -28,7 +48,7 @@ class _IsPrintingDialogState extends ConsumerState<IsScanningDialog> {
     return Center(
         child: Container(
       width: 256,
-      height: (status == ScanStatus.initial) ? 530 : 420,
+      height: ([ScanStatus.initial, ScanStatus.connectToWifi].contains(status)) ? 530 : 420,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -71,21 +91,28 @@ class _IsPrintingDialogState extends ConsumerState<IsScanningDialog> {
                     fontWeight: FontWeight.w500),
               ),
             ),
-            (status == ScanStatus.initial)
+            (status == ScanStatus.initial || status == ScanStatus.connectToWifi)
                 ? Column(
                     children: [
                       const SizedBox(height: 16),
                       OutlinedButton(
                         onPressed: () {
-                          ref
-                              .read(scanProvider)
-                              .updateStatus(ScanStatus.searching);
-                          getContact();
+                          if (status == ScanStatus.initial) {
+                            ref
+                                .read(scanProvider)
+                                .updateStatus(ScanStatus.searching);
+                            getScan();
+                          } else if (status == ScanStatus.connectToWifi) {
+                            getContact();
+                          }
                         },
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text('Scan',
-                              style: TextStyle(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                              (status == ScanStatus.initial)
+                                  ? 'Scan'
+                                  : 'Continue',
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.white,
